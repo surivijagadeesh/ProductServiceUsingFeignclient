@@ -66,6 +66,12 @@ public class ProductController {
 	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found.");
 	    }
 	}
+	
+	@PostMapping("/convertJsonToProducts")
+    public ResponseEntity<List<Product>> convertJsonToProductList(@RequestBody String jsonString) {
+        List<Product> products = productService.convertJsonToProductList(jsonString);
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
 
 
 }

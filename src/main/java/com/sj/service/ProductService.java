@@ -17,4 +17,7 @@ public interface ProductService {
 	Product updateProductByPatch(Long id, Product request);
 
 	boolean deleteProduct(Long id);
+
+	List<Product> convertJsonToProductList(String jsonString);
+
 }

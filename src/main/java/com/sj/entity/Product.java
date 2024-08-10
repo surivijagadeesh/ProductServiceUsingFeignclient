@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name="Product_Tbl")
@@ -19,15 +20,26 @@ public class Product {
     private long price;
     @Column(name = "QUANTITY")
     private long quantity;
+    @Transient  // This field will not be persisted to the database
+    private String platformName;
     
+	public String getPlatformName() {
+		return platformName;
+	}
+
+	public void setPlatformName(String platformName) {
+		this.platformName = platformName;
+	}
+
 	public Product() {}
 	
-	public Product(long productId, String productName, long price, long quantity) {
+	public Product(long productId, String productName, long price, long quantity,String platformName) {
 		super();
 		this.productId = productId;
 		this.productName = productName;
 		this.price = price;
 		this.quantity = quantity;
+		this.platformName = platformName;
 	}
 	public long getProductId() {
 		return productId;
@@ -53,11 +65,13 @@ public class Product {
 	public void setQuantity(long quantity) {
 		this.quantity = quantity;
 	}
+
 	@Override
 	public String toString() {
 		return "Product [productId=" + productId + ", productName=" + productName + ", price=" + price + ", quantity="
-				+ quantity + "]";
+				+ quantity + ", platformName=" + platformName + "]";
 	}
+
     
     
 }

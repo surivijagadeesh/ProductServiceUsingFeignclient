@@ -1,13 +1,19 @@
 package com.sj.serviceImpl;
 
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+//import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import com.sj.entity.Product;
+import com.sj.exception.CustomException;
 import com.sj.repository.ProductRepository;
 import com.sj.service.ProductService;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.transaction.Transactional;
 @Service
@@ -15,6 +21,8 @@ import jakarta.transaction.Transactional;
 public class ProductServiceImpl implements ProductService{
 	@Autowired
 	private ProductRepository repository;
+	
+	private ObjectMapper objectMapper = new ObjectMapper();
 
 	@Override
 	public Product createProduct(Product product) {
@@ -31,7 +39,7 @@ public class ProductServiceImpl implements ProductService{
         if (product.isPresent()) {
             return product.get();
         } else {
-            throw new RuntimeException("Product not found with id: " + id);
+            throw new CustomException("Product not Found","Product not found with id: " + id,HttpStatus.NOT_FOUND.value());
         }
     }
 
@@ -87,5 +95,15 @@ public class ProductServiceImpl implements ProductService{
 		return false;
 	}
 
+	
+	@Override
+    public List<Product> convertJsonToProductList(String jsonString) {
+        try {
+            return objectMapper.readValue(jsonString, new TypeReference<List<Product>>(){});
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error parsing JSON string to Product list");
+        }
 
+	}
 }
