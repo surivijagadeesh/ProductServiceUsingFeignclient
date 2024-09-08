@@ -17,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import com.sj.Model.OrderResponse;
 import com.sj.Model.ProductResponse;
 import com.sj.entity.Product;
+import com.sj.feignClient.orderClient;
 //import com.sj.exception.CustomException;
 import com.sj.repository.ProductRepository;
 import com.sj.service.ProductService;
@@ -33,17 +34,20 @@ public class ProductServiceImpl implements ProductService{
 	@Autowired
 	private ModelMapper modelMapper;
 	
+	@Autowired
+	private orderClient orderClient;
+	
 	//@Autowired
-	private RestTemplate restTemplate;  //null
+	//private RestTemplate restTemplate;  //null
 	
 	//@Value("${orderservice.base.url}")
 	//private String orderBaseUrl;
 	
-	ProductServiceImpl (@Value("${orderservice.base.url}") String orderBaseUrl, RestTemplateBuilder builder){
-        this.restTemplate=builder
-        		.rootUri(orderBaseUrl)  
-        		.build();   //intialize rest template     
-	}
+//	ProductServiceImpl (@Value("${orderservice.base.url}") String orderBaseUrl, RestTemplateBuilder builder){
+//        this.restTemplate=builder
+//        		.rootUri(orderBaseUrl)  
+//        		.build();   //intialize rest template     
+//	}
 	
 	private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -61,7 +65,7 @@ public class ProductServiceImpl implements ProductService{
     	
     	Product product = repository.findById(id).get();
 		ProductResponse productResponse = modelMapper.map(product, ProductResponse.class);
-		OrderResponse orderResponse = restTemplate.getForObject("/getOrdersbyID/{id}",OrderResponse.class, id);
+		OrderResponse orderResponse = orderClient.getOrderResposnseByID(id);
 		
 	    productResponse.setOrderResponse(orderResponse);
 	    return productResponse;	
