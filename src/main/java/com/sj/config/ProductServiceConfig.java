@@ -10,8 +10,7 @@ public class ProductServiceConfig {
 	@Bean
 	public ModelMapper modelMapper() {
 		return new ModelMapper();
-	}
-	
+	}	
 //	@Bean
 //	public RestTemplate restTemplate () {
 //		return new RestTemplate();
