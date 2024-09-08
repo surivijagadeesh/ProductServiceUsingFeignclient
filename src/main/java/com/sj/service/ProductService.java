@@ -2,13 +2,14 @@ package com.sj.service;
 
 import java.util.List;
 
+import com.sj.Model.ProductResponse;
 import com.sj.entity.Product;
 
 public interface ProductService {
 
 	Product createProduct(Product product);
 
-	Product getProductById(Long id);
+	ProductResponse getProductById(Long id);
 
 	List<Product> getProducts();
 

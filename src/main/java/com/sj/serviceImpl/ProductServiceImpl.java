@@ -4,12 +4,20 @@ package com.sj.serviceImpl;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+//import org.springframework.http.HttpStatus;
 //import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import com.sj.Model.OrderResponse;
+import com.sj.Model.ProductResponse;
 import com.sj.entity.Product;
-import com.sj.exception.CustomException;
+//import com.sj.exception.CustomException;
 import com.sj.repository.ProductRepository;
 import com.sj.service.ProductService;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -21,6 +29,21 @@ import jakarta.transaction.Transactional;
 public class ProductServiceImpl implements ProductService{
 	@Autowired
 	private ProductRepository repository;
+	
+	@Autowired
+	private ModelMapper modelMapper;
+	
+	//@Autowired
+	private RestTemplate restTemplate;  //null
+	
+	//@Value("${orderservice.base.url}")
+	//private String orderBaseUrl;
+	
+	ProductServiceImpl (@Value("${orderservice.base.url}") String orderBaseUrl, RestTemplateBuilder builder){
+        this.restTemplate=builder
+        		.rootUri(orderBaseUrl)  
+        		.build();   //intialize rest template     
+	}
 	
 	private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -34,13 +57,15 @@ public class ProductServiceImpl implements ProductService{
 	}
 
     @Override
-    public Product getProductById(Long id) {
-        Optional<Product> product = repository.findById(id);
-        if (product.isPresent()) {
-            return product.get();
-        } else {
-            throw new CustomException("Product not Found","Product not found with id: " + id,HttpStatus.NOT_FOUND.value());
-        }
+    public ProductResponse getProductById(Long id) {
+    	
+    	Product product = repository.findById(id).get();
+		ProductResponse productResponse = modelMapper.map(product, ProductResponse.class);
+		OrderResponse orderResponse = restTemplate.getForObject("/getOrdersbyID/{id}",OrderResponse.class, id);
+		
+	    productResponse.setOrderResponse(orderResponse);
+	    return productResponse;	
+		
     }
 
 	@Override

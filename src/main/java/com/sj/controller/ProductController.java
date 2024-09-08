@@ -8,9 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+//import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sj.Model.ProductResponse;
 import com.sj.entity.Product;
 import com.sj.service.ProductService;
 
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 
 @RestController
-@RequestMapping("/api")
 public class ProductController {
 	
 	@Autowired
@@ -34,9 +34,9 @@ public class ProductController {
 	}
 	
 	@GetMapping("/getProduct/{id}")
-	public ResponseEntity<Product> getProductById (@PathVariable ("id") Long id){
-		Product productData=productService.getProductById(id);
-		return new ResponseEntity<Product>(productData,HttpStatus.OK);
+	public ResponseEntity<ProductResponse> getProductById (@PathVariable ("id") Long id){
+		ProductResponse productData=productService.getProductById(id);
+		return new ResponseEntity<ProductResponse>(productData,HttpStatus.OK);
 	}
 	
 	@GetMapping("/getProducts")
