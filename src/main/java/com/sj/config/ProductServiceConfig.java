@@ -15,5 +15,4 @@ public class ProductServiceConfig {
 //	public RestTemplate restTemplate () {
 //		return new RestTemplate();
 //	}
-
 }
