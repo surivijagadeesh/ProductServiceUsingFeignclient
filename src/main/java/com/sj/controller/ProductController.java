@@ -72,6 +72,4 @@ public class ProductController {
         List<Product> products = productService.convertJsonToProductList(jsonString);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
-
-
 }
